@@ -6,6 +6,11 @@
 ### 日记是以ini 文档的形式进行存储的。一个日记对应一个ini 文件。
 ### 日记的内容通过encodebase64 加密。
 
+## 使用方式
+1. git clone  路径
+2. 使用vscode 打开代码，使用 npm install 下载依赖包
+3. npm start 执行
+4. npm run package 打包
 
 ### todo
 1. 允许自定义字体
