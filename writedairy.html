@@ -1,0 +1,154 @@
+<!DOCTYPE >
+<html>
+<head>
+    <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
+    <title></title>
+    <meta name="viewport" content="text/html" charset="UTF-8" />
+    <link rel="stylesheet" href="./assert/css/kendo.default-ocean-blue.min.css" />
+    <script>window.$ = window.jQuery = require('./assert/js/jquery-1.12.4.min.js') </script>
+    <script type="text/javascript" src="assert/booklet/booklet/jquery.base64.js" ></script>
+    <script src="assert/js/kendo.all.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="assert/css/writeDiaryStyles.css" />
+</head>
+<body>
+    <div id="container">
+        <button id="diayBook_btn" class="k-button k-button-solid-primary k-button-solid k-button-md k-rounded-md"><span class="k-icon k-i-undo"></span>返回日记本
+        </button>
+        <div class="diary-date-weather">
+            <div class="date-selector">
+                <span id=""></sapn>
+                <h4 style="margin-top:1em">请选择日期:</h4>
+                <input id="diary-date-picker" style="width: 80%">
+                <span id="dayofweek" style="margin-left: 20px;"></span> 
+            </div>
+            <div class="weather_selector">
+                <h4 style="margin-top:1em">请选择天气:</h4>
+                <input id="categories" style="width: 100%;" />
+            </div>
+        </div>
+        <div class="diary-content-container">
+            <form id="invitationForm">
+                <h4 style="margin-top:1em">请输入日记内容:</h4>
+                <textarea id="diarytext" style="width: 100%;" required data-required-msg="Please enter a text." data-max-msg="Enter value between 1 and 21000" ></textarea>
+                <div class="k-form-footer">
+                    <div class="k-counter-container"><span class="k-counter-value">0</span>/1000</div>
+                    <button class="k-button k-button-solid-primary k-button-solid k-button-md k-rounded-md">保存日记
+                    </button>
+                </div>
+            </form>
+        </div>
+        <script>
+            var render=require('./assert/js/renderer.js')
+            $(document).ready(function() {
+                var categories = $("#categories").kendoDropDownList({
+                    dataTextField: "weatherName",
+                    dataValueField: "weatherName",
+                    height: 200,
+                    template: '<span class="k-state-default" style="background-image: url(\'#:data.imageUrl#\');" ></span><span class=\"k-state-default\" style=\"padding-left: 15px;\"><h3>#:data.weatherName#</h3></span>',
+                    valueTemplate: '<span class="selected-value" style="background-image: url(\'#:data.imageUrl#\');"></span><span>#:data.weatherName#</span>',
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "./assert/js/weather.json",
+                                dataType: "json"
+                            }
+                        }
+                    }
+                }).data("kendoDropDownList");
+    
+                $("#diary-date-picker").kendoDatePicker({
+                    value: new Date(),
+                    disableDates: function (date) {
+                        var dates = $("#diary-date-picker").data("kendoDatePicker").options.dates;
+                        if (date && compareDates(date)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                $('#diary-date-picker').attr('disabled', 'disabled');
+    
+                $('#diary-date-picker').change(function(){
+                    var datetemp=$("#diary-date-picker").val();
+                    getDayOfWeek(datetemp)
+                    getDairyByDate(datetemp)
+                });
+                var datetemp=$("#diary-date-picker").val();
+                getDayOfWeek(datetemp)
+                getDairyByDate(datetemp)
+                function compareDates(date) {
+                    var today=new Date();
+                    if(date>today){
+                        return true;
+                    }
+                }
+    
+                $("#diarytext").kendoTextArea({
+                    rows: 14,
+                    maxLength:1000,
+                    placeholder: "Enter your text here."
+                });
+    
+                $("#diarytext").on('input', function (e) {
+                    $('.k-counter-container .k-counter-value').html($(e.target).val().length);
+                });
+    
+                $("#invitationForm").kendoValidator();
+
+                $('#diayBook_btn').click(function(){
+                    location.href='./index.html';
+                })
+    
+                $("form").submit(function (event) {
+                    var content=$("#diarytext").val();
+                    var date=$("#diary-date-picker").val();
+                    var weather=$("#categories").val();
+                    render.SaveDiary({"Content":content,"Date":date,"Weather":weather});
+                    event.preventDefault();
+                    myalert("日记","保存日记成功！！！")
+                    setTimeout(()=> {
+                        location.href='./index.html'
+                    },2000);
+                });
+            });
+    
+            function getDairyByDate(date){
+                console.log("getDairyByDate")
+                console.log(date)
+
+                var diaryData=render.GetDiaryByDate(date)
+
+                var weatherDropdownlist = $("#categories").data("kendoDropDownList");
+                if(JSON.stringify(diaryData) != '{}'){
+                    weatherDropdownlist.select(function(dataItem) {
+                        return dataItem.weatherName === diaryData.Weather;
+                    });
+                    $("#diarytext").val(diaryData.Content);
+                }
+                else{
+                    weatherDropdownlist.select(0);
+                    $("#diarytext").val("");
+                }
+                console.log(diaryData)
+            }
+        
+            
+            function getDayOfWeek(date){
+                var daytemp=new Date(Date.parse(date));
+                var today=new Array('星期日','星期一','星期二','星期三','星期四','星期五','星期六');
+                var week=today[daytemp.getDay()];
+                console.log(week);
+                $('#dayofweek').text(week);
+            }
+
+            function myalert(title,content) {
+                $("<div></div>").kendoAlert({
+                    title: title,
+                    content: content
+                }).data("kendoAlert").open();
+            }
+        </script>
+    </div>
+</body>
+</html>

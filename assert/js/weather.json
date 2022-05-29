@@ -1,0 +1,54 @@
+[
+    {
+        "weatherName": "晴天",
+        "imageUrl":"./assert/images/weather_03.png"
+    },
+    {
+        "weatherName": "晴转多云",
+        "imageUrl":"./assert/images/weather_02.png"
+    },
+    {
+        "weatherName": "晴转雨",
+        "imageUrl":"./assert/images/weather_04.png"
+    },
+    {
+        "weatherName": "阴天",
+        "imageUrl":"./assert/images/weather_01.png"
+    },
+    {
+        "weatherName": "多云",
+        "imageUrl":"./assert/images/weather_05.png"
+    },
+    {
+        "weatherName": "小雨",
+        "imageUrl":"./assert/images/weather_06.png"
+    },
+    {
+        "weatherName": "中雨",
+        "imageUrl":"./assert/images/weather_07.png"
+    },
+    {
+        "weatherName": "大雨",
+        "imageUrl":"./assert/images/weather_07.png"
+    },
+    {
+        "weatherName": "雷电",
+        "imageUrl":"./assert/images/weather_08.png"
+    },
+    {
+        "weatherName": "雨夹雪",
+        "imageUrl":"./assert/images/weather_11.png"
+    },
+    {
+        "weatherName": "小雪",
+        "imageUrl":"./assert/images/weather_10.png"
+    },
+    {
+        "weatherName": "中雪",
+        "imageUrl":"./assert/images/weather_12.png"
+    },
+    {
+        "weatherName": "大雪",
+        "imageUrl":"./assert/images/weather_12.png"
+    }
+]
